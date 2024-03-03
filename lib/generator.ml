@@ -22,6 +22,12 @@ let process_int_type schema =
   | Some `Int64 -> "int64"
   | _ -> failwith "int has unextected format"
 
+let process_string_type schema =
+  match schema.format with 
+  | None -> "string"
+  | Some `Decimal -> "float"
+  | _ -> "string"
+
 let get_ref_name ref =
   let uri, pointer =
     match String.split_on_char '#' ref with
@@ -156,7 +162,7 @@ let rec process_schema_type ~ancestors (schema : schema) =
   match schema.typ with
   | Some Integer -> maybe_nullable (process_int_type schema)
   | Some Number -> maybe_nullable "float"
-  | Some String -> maybe_nullable "string"
+  | Some String -> maybe_nullable (process_string_type schema)
   | Some Boolean -> maybe_nullable "bool"
   | Some Array -> maybe_nullable (process_array_type ~ancestors schema |> String.concat " ")
   | Some Object -> process_object_type ~ancestors schema

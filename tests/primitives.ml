@@ -26,6 +26,21 @@ let string_test _ =
   let output = "type dummy = string" in
   assert_schema input output
 
+let uuid_test _ =
+  let input = {|{"dummy": { "type": "string", "format": "uuid"}}|} in
+  let output = "type dummy = Uuidm.t" in
+  assert_schema input output
+
+let uri_test _ =
+  let input = {|{"dummy": { "type": "string", "format": "uri"}}|} in
+  let output = "type dummy = Uri.t" in
+  assert_schema input output
+
+let number_string_test _ =
+  let input = {|{"dummy": { "type": "string", "format": "decimal"}}|} in
+  let output = "type dummy = float" in
+  assert_schema input output
+
 let array_test _ =
   let input = {|{"dummy":{"type":"array","items":{"type":"string"}}}|} in
   let output = {|type dummy = string list|} in
@@ -39,6 +54,9 @@ let suite =
          "number" >:: number_test;
          "boolean" >:: boolean_test;
          "string" >:: string_test;
+         "uuid" >:: uuid_test;
+         "uri" >:: uri_test;
+         "number string" >:: number_string_test;
          "array" >:: array_test;
        ]
 
